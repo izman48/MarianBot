@@ -25,21 +25,23 @@ public class Main extends ListenerAdapter {
     private static int messagecount;
     private static int callumcount;
     private static int pings;
+    private static int sextalk;
     private String botid = "652988416996147201";
     private static Instant start;
     private Duration timeElapsed;
 
 
-    public static void main(String[] args) throws LoginException {
+    public static void main(String[] args) throws Exception {
 
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File("../../../MarianToken")), "UTF8"));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File("./MarianToken")), "UTF8"));
             builder = new JDABuilder(AccountType.BOT).setToken(reader.readLine()).build();
             reader.close();
             builder.getPresence().setActivity(Activity.watching("anime"));
             messagecount = 0;
             callumcount = 0;
             pings = 0;
+            sextalk = 0;
             start = Instant.now();
             builder.addEventListener(new Main());
         } catch (Exception e) {
@@ -71,32 +73,61 @@ public class Main extends ListenerAdapter {
             String[] split = content.split("\\s+", -1);
 
             String jamesBotID = "617295138271526912";
-            String callumsId = "253532065096663042";
+            String callumsID = "253532065096663042";
+            String paulID = "436845534125490196";
+            String playerID = "655124475058192404";
 
-            System.out.println("We received a message from " +
-                     name + ": " +
-                    event.getMessage().getContentDisplay()
-                    + ": " + messagecount);
+//            System.out.println("We received a message from " +
+//                     name + ": " +
+//                    event.getMessage().getContentDisplay()
+//                    + ": " + messagecount);
 
-            if (content.contains("@Player")) {
+            if (isTarget(split, playerID)) {
                 channel.sendMessage("no").queue();
+                return;
+            }
+
+            if (content.toLowerCase().contains("sex") || content.toLowerCase().contains("pegging")) {
+                sextalk++;
+                if (sextalk < 5) {
+                    switch (random.nextInt(2)) {
+                        case 0:
+                            channel.sendMessage("no sex talk please").queue();
+                            break;
+                        case 1:
+                            channel.sendMessage("<!@" + author + "> stop.").queue();
+                            break;
+                    }
+                } else {
+                    ragequits(channel);
+                    sextalk = 0;
+                }
+                return;
+
+
             }
 
             if (isTarget(split, botid)) {
                     pings++;
                     if (pings < 20) {
-                        switch (random.nextInt(5)) {
-                            case 0:
-                            case 1:
-                            case 2:
-                                channel.sendMessage("The pings are unbearable").queue();
-                                break;
-                            case 3:
-                                channel.sendMessage("xd").queue();
-                                break;
-                            case 4:
-                                channel.sendMessage("OwO").queue();
-                                break;
+                        if (author.equals(callumsID)) {
+                            channel.sendMessage("<@!" + callumsID + "> motherfucker").queue();
+                            callumcount = 0;
+                        }  else if (author.equals(paulID)) {
+                            channel.sendMessage("PAULLLLLLLLLLLLLL").queue();
+                        } else {
+                            switch (random.nextInt()) {
+                                case 0:
+                                case 1:
+                                    channel.sendMessage("The pings are unbearable").queue();
+                                    break;
+                                case 2:
+                                    channel.sendMessage("xd").queue();
+                                    break;
+                                case 3:
+                                    channel.sendMessage("OwO").queue();
+                                    break;
+                            }
                         }
                     } else {
                         switch (random.nextInt(5)) {
@@ -109,27 +140,27 @@ public class Main extends ListenerAdapter {
                                 channel.sendMessage("fuck off <@!" + author + ">").queue();
                                 break;
                             case 4:
-                                channel.sendMessage("i'm done").queue();
-                                channel.sendMessage("***passive aggresively rage quits***").queue();
-                                builder.getPresence().setStatus(OnlineStatus.OFFLINE);
-                                start = Instant.now();
+                                ragequits(channel);
                                 break;
                         }
                     }
+                    return;
             }
 
-            if (messagecount >= 1000) {
+            if (messagecount >= 100) {
                 messagecount = 0;
-                channel.sendMessage("I'm scared of gays").queue();
+                channel.sendMessage("I'm scared").queue();
+                return;
             }
 
             // if callum messages a lot
-            if (author.equals(callumsId)){
+            if (author.equals(callumsID)){
                 callumcount++;
-                if (callumcount > 40) {
-                    channel.sendMessage("<@!" + callumsId + "> motherfucker").queue();
+                if (callumcount > 20) {
+                    channel.sendMessage("<@!" + callumsID + "> motherfucker").queue();
                     callumcount = 0;
                 }
+                return;
             }
 
             //if jamesbot messages
@@ -137,16 +168,36 @@ public class Main extends ListenerAdapter {
                 if (content.contains("very cool")) {
                     channel.sendMessage("thanks <@!" + jamesBotID + ">").queue();
                 }
+                return;
             }
 
             if (split[0].toLowerCase().equals("imagine")) {
                 channel.sendMessage("imagine").queue();
+                return;
+            }
+            if (content.toLowerCase().contains("halfflip") || content.toLowerCase().contains("half flip")) {
+                channel.sendMessage("whats that?").queue();
+                return;
+            }
+
+            if (content.toLowerCase().contains("nrg")) {
+                channel.sendMessage(":heart_eyes: ").queue();
+                return;
+            }
+            if (content.toLowerCase().contains("gay")) {
+                channel.sendMessage(":grimacing: ").queue();
             }
 
         }
 
     }
 
+    private void ragequits(MessageChannel channel) {
+        channel.sendMessage("i'm done").queue();
+        channel.sendMessage("***passive aggresively rage quits***").queue();
+        builder.getPresence().setStatus(OnlineStatus.OFFLINE);
+        start = Instant.now();
+    }
     private boolean isTarget(String[] args, String id) {
         for (String arg : args) {
             if (arg.equals("<@!"+id+">")||arg.equals("<@"+id+">")) {
