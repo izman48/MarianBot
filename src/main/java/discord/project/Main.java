@@ -3,7 +3,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.Random;
+import java.util.*;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -14,6 +14,8 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.Role;
+
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 //import net.dv8tion.jda.core.*;
@@ -26,7 +28,7 @@ public class Main extends ListenerAdapter {
     private static int callumcount;
     private static int pings;
     private static int sextalk;
-    private String botid = "652988416996147201";
+    private String botID = "652988416996147201";
     private static Instant start;
     private Duration timeElapsed;
 
@@ -44,6 +46,7 @@ public class Main extends ListenerAdapter {
             sextalk = 0;
             start = Instant.now();
             builder.addEventListener(new Main());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,71 +56,89 @@ public class Main extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
         Instant end = Instant.now();
         timeElapsed = Duration.between(start, end);
-
-
+        String author = event.getAuthor().getId();
+        Message message = event.getMessage();
+        String content = message.getContentRaw();
+        String[] split = content.split("\\s+", -1);
+        if (author.equals("399120960906854411") && content.equals("terminate") && isTarget(split, botID)) {
+            System.exit(0);
+        }
         if (timeElapsed.toMinutes() >= 30 && builder.getPresence().getStatus().equals(OnlineStatus.INVISIBLE)) {
             builder.getPresence().setStatus((OnlineStatus.ONLINE));
             pings = 0;
         }
 
-        if (event.getChannel().getName().equals("general") && !event.getAuthor().getId().equals(botid) && builder.getPresence().getStatus().equals(OnlineStatus.ONLINE)) {
+        if (event.getChannel().getName().equals("general") && !event.getAuthor().getId().equals(botID) && builder.getPresence().getStatus().equals(OnlineStatus.ONLINE)) {
             messagecount++;
 
             String name = event.getAuthor().getName();
-            String author = event.getAuthor().getId();
-            Message message = event.getMessage();
-            String content = message.getContentRaw();
+            List<Role> roles = message.getMentionedRoles();
             MessageChannel channel = event.getChannel();
             Random random = new Random();
 
-            String[] split = content.split("\\s+", -1);
+
 
             String jamesBotID = "617295138271526912";
             String callumsID = "253532065096663042";
             String paulID = "436845534125490196";
-            String playerID = "655124475058192404";
+            String playerID = "480421153651949589";
 
-//            System.out.println("We received a message from " +
-//                     name + ": " +
-//                    event.getMessage().getContentDisplay()
-//                    + ": " + messagecount);
+            System.out.println("We received a message from " +
+                     name + ": " +
+                    event.getMessage().getContentDisplay()
+                    + ": " + messagecount);
 
-            if (isTarget(split, playerID)) {
-                channel.sendMessage("no").queue();
-                return;
-            }
-
-            if (content.toLowerCase().contains("sex") || content.toLowerCase().contains("pegging")) {
-                sextalk++;
-                if (sextalk < 5) {
-                    switch (random.nextInt(2)) {
-                        case 0:
-                            channel.sendMessage("no sex talk please").queue();
-                            break;
-                        case 1:
-                            channel.sendMessage("<!@" + author + "> stop.").queue();
-                            break;
-                    }
-                } else {
-                    ragequits(channel);
-                    sextalk = 0;
+            for (Role r : roles) {
+                if (r.getName().equals(("Player")) && random.nextInt(2) == 1){
+                    channel.sendMessage("no").queue();
+                    return;
                 }
-                return;
-
-
             }
+            boolean pass = true;
+            if (author.equals(jamesBotID)){
+                pass = false;
+                if (content.contains("very cool")) {
+                    channel.sendMessage("thanks <@!" + jamesBotID + ">").queue();
+                    return;
+                } else {
+                    if (random.nextInt(10) == 1) {
+                        pass = true;
+                    }
+                }
+            }
+            if (pass){
 
-            if (isTarget(split, botid)) {
+                if (content.toLowerCase().contains("sex") || content.toLowerCase().contains("pegging")) {
+                    sextalk++;
+                    if (sextalk < 5) {
+                        switch (random.nextInt(2)) {
+                            case 0:
+                                channel.sendMessage("no sex talk please").queue();
+                                break;
+                            case 1:
+                                channel.sendMessage("<!@" + author + "> stop.").queue();
+                                break;
+                        }
+                    } else {
+                        ragequits(channel);
+                        sextalk = 0;
+                    }
+                    return;
+                }
+
+                if (isTarget(split, botID)) {
                     pings++;
                     if (pings < 20) {
                         if (author.equals(callumsID)) {
                             channel.sendMessage("<@!" + callumsID + "> motherfucker").queue();
                             callumcount = 0;
-                        }  else if (author.equals(paulID)) {
+                        } else if (author.equals(paulID)) {
                             channel.sendMessage("PAULLLLLLLLLLLLLL").queue();
                         } else {
-                            switch (random.nextInt()) {
+                            switch (random.nextInt(5)) {
                                 case 0:
+                                    channel.sendMessage("ree").queue();
+                                    break;
                                 case 1:
                                     channel.sendMessage("The pings are unbearable").queue();
                                     break;
@@ -125,8 +146,11 @@ public class Main extends ListenerAdapter {
                                     channel.sendMessage("xd").queue();
                                     break;
                                 case 3:
+
+                                case 4:
                                     channel.sendMessage("OwO").queue();
                                     break;
+
                             }
                         }
                     } else {
@@ -145,47 +169,43 @@ public class Main extends ListenerAdapter {
                         }
                     }
                     return;
-            }
-
-            if (messagecount >= 100) {
-                messagecount = 0;
-                channel.sendMessage("I'm scared").queue();
-                return;
-            }
-
-            // if callum messages a lot
-            if (author.equals(callumsID)){
-                callumcount++;
-                if (callumcount > 20) {
-                    channel.sendMessage("<@!" + callumsID + "> motherfucker").queue();
-                    callumcount = 0;
                 }
-                return;
-            }
 
-            //if jamesbot messages
-            if (author.equals(jamesBotID)){
-                if (content.contains("very cool")) {
-                    channel.sendMessage("thanks <@!" + jamesBotID + ">").queue();
+                if (messagecount >= 100) {
+                    messagecount = 0;
+                    channel.sendMessage("I'm scared").queue();
+                    return;
                 }
-                return;
-            }
 
-            if (split[0].toLowerCase().equals("imagine")) {
-                channel.sendMessage("imagine").queue();
-                return;
-            }
-            if (content.toLowerCase().contains("halfflip") || content.toLowerCase().contains("half flip")) {
-                channel.sendMessage("whats that?").queue();
-                return;
-            }
+                // if callum messages a lot
+                if (author.equals(callumsID)) {
+                    callumcount++;
+                    if (callumcount > 20) {
+                        channel.sendMessage("<@!" + callumsID + "> motherfucker").queue();
+                        callumcount = 0;
+                    }
+                    return;
+                }
 
-            if (content.toLowerCase().contains("nrg")) {
-                channel.sendMessage(":heart_eyes: ").queue();
-                return;
-            }
-            if (content.toLowerCase().contains("gay")) {
-                channel.sendMessage(":grimacing: ").queue();
+                //if jamesbot messages
+
+
+                if (split[0].toLowerCase().equals("imagine") && random.nextInt(4) == 1) {
+                    channel.sendMessage("imagine").queue();
+                    return;
+                }
+                if (content.toLowerCase().contains("halfflip") || content.toLowerCase().contains("half flip")) {
+                    channel.sendMessage("whats that?").queue();
+                    return;
+                }
+
+                if (content.toLowerCase().contains("nrg")) {
+                    channel.sendMessage(":heart_eyes: ").queue();
+                    return;
+                }
+                if (content.toLowerCase().contains("gay")) {
+                    channel.sendMessage(":grimacing: ").queue();
+                }
             }
 
         }
