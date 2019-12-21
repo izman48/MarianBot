@@ -81,7 +81,7 @@ public class Main extends ListenerAdapter {
             String jamesBotID = "617295138271526912";
             String callumsID = "253532065096663042";
             String paulID = "436845534125490196";
-            String playerID = "480421153651949589";
+            String dannersBotID = "654355523625287719";
 
             System.out.println("We received a message from " +
                      name + ": " +
@@ -89,7 +89,7 @@ public class Main extends ListenerAdapter {
                     + ": " + messagecount);
 
             for (Role r : roles) {
-                if (r.getName().equals(("Player")) && random.nextInt(2) == 1){
+                if (r.getName().equals(("Player")) && random.nextInt(20) == 1){
                     channel.sendMessage("no").queue();
                     return;
                 }
@@ -97,7 +97,7 @@ public class Main extends ListenerAdapter {
             boolean pass = true;
             if (author.equals(jamesBotID)){
                 pass = false;
-                if (content.contains("very cool")) {
+                if (split[0].equals("very") && split[1].equals("cool")) {
                     channel.sendMessage("thanks <@!" + jamesBotID + ">").queue();
                     return;
                 } else {
@@ -105,9 +105,13 @@ public class Main extends ListenerAdapter {
                         pass = true;
                     }
                 }
+            } else if (author.equals(dannersBotID)) {
+                pass = false;
+                if (random.nextInt(10) == 1) {
+                    pass = true;
+                }
             }
             if (pass){
-
                 if (content.toLowerCase().contains("sex") || content.toLowerCase().contains("pegging")) {
                     sextalk++;
                     if (sextalk < 5) {
@@ -116,13 +120,18 @@ public class Main extends ListenerAdapter {
                                 channel.sendMessage("no sex talk please").queue();
                                 break;
                             case 1:
-                                channel.sendMessage("<!@" + author + "> stop.").queue();
+                                channel.sendMessage("<@!" + author + "> stop.").queue();
                                 break;
                         }
                     } else {
                         ragequits(channel);
                         sextalk = 0;
                     }
+                    return;
+                }
+
+                if (split[0].toLowerCase().equals("imagine") && random.nextInt(2) == 1) {
+                    channel.sendMessage("imagine").queue();
                     return;
                 }
 
@@ -146,24 +155,29 @@ public class Main extends ListenerAdapter {
                                     channel.sendMessage("xd").queue();
                                     break;
                                 case 3:
-
+                                    channel.sendMessage("k").queue();
+                                    break;
                                 case 4:
                                     channel.sendMessage("OwO").queue();
                                     break;
-
                             }
                         }
                     } else {
-                        switch (random.nextInt(5)) {
+                        switch (random.nextInt(10)) {
                             case 0:
-                                channel.sendMessage("The pings are unbearable").queue();
-                                break;
                             case 1:
                             case 2:
+                                channel.sendMessage("The pings are unbearable").queue();
+                                break;
                             case 3:
+                            case 4:
+                            case 5:
+                            case 6:
+                            case 7:
+                            case 8:
                                 channel.sendMessage("fuck off <@!" + author + ">").queue();
                                 break;
-                            case 4:
+                            case 9:
                                 ragequits(channel);
                                 break;
                         }
@@ -173,7 +187,12 @@ public class Main extends ListenerAdapter {
 
                 if (messagecount >= 100) {
                     messagecount = 0;
-                    channel.sendMessage("I'm scared").queue();
+                    if (random.nextInt(2) ==  0){
+                        channel.sendMessage("I'm scared").queue();
+                    } else {
+                        channel.sendMessage("I am confusion").queue();
+                    }
+
                     return;
                 }
 
@@ -187,14 +206,9 @@ public class Main extends ListenerAdapter {
                     return;
                 }
 
-                //if jamesbot messages
 
 
-                if (split[0].toLowerCase().equals("imagine") && random.nextInt(4) == 1) {
-                    channel.sendMessage("imagine").queue();
-                    return;
-                }
-                if (content.toLowerCase().contains("halfflip") || content.toLowerCase().contains("half flip")) {
+                if (content.toLowerCase().contains("halfflip") || content.toLowerCase().contains("half flip") || content.toLowerCase().contains("half-flip")) {
                     channel.sendMessage("whats that?").queue();
                     return;
                 }
@@ -205,6 +219,19 @@ public class Main extends ListenerAdapter {
                 }
                 if (content.toLowerCase().contains("gay")) {
                     channel.sendMessage(":grimacing: ").queue();
+                    return;
+                }
+                if (content.toLowerCase().contains("tory")) {
+                    channel.sendMessage(":rage: :rage: :rage:").queue();
+                }
+                if (content.toLowerCase().contains("politics")) {
+                    channel.sendMessage("if anyone votes tory unfriend me ").queue();
+                }
+                if (content.toLowerCase().contains("weird")) {
+                    channel.sendMessage("but it worksssss").queue();
+                }
+                if (content.toLowerCase().equals("the pings are unbearable")) {
+                    channel.sendMessage("agreed").queue();
                 }
             }
 
