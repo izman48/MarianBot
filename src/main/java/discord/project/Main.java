@@ -60,7 +60,7 @@ public class Main extends ListenerAdapter {
         Message message = event.getMessage();
         String content = message.getContentRaw();
         String[] split = content.split("\\s+", -1);
-        if (author.equals("399120960906854411") && content.equals("terminate") && isTarget(split, botID)) {
+        if (author.equals("399120960906854411") && content.contains("terminate") && isTarget(split, botID)) {
             System.exit(0);
         }
         if (timeElapsed.toMinutes() >= 30 && builder.getPresence().getStatus().equals(OnlineStatus.INVISIBLE)) {
@@ -130,7 +130,7 @@ public class Main extends ListenerAdapter {
                     return;
                 }
 
-                if (split[0].toLowerCase().equals("imagine") && random.nextInt(2) == 1) {
+                if (split[0].toLowerCase().equals("imagine") && random.nextInt(10) == 1) {
                     channel.sendMessage("imagine").queue();
                     return;
                 }
