@@ -90,24 +90,19 @@ public class Main extends ListenerAdapter {
 
             for (Role r : roles) {
                 if (r.getName().equals(("Player")) && random.nextInt(20) == 1){
-                    channel.sendMessage("no").queue();
+                    channel.sendMessage("hi").queue();
                     return;
                 }
             }
             boolean pass = true;
             if (author.equals(jamesBotID)){
                 pass = false;
-                if (split[0].equals("very") && split[1].equals("cool")) {
-                    channel.sendMessage("thanks <@!" + jamesBotID + ">").queue();
-                    return;
-                } else {
-                    if (random.nextInt(10) == 1) {
-                        pass = true;
-                    }
+                if (random.nextInt(100) == 1) {
+                    pass = true;
                 }
             } else if (author.equals(dannersBotID)) {
                 pass = false;
-                if (random.nextInt(10) == 1) {
+                if (random.nextInt(100) == 1) {
                     pass = true;
                 }
             }
@@ -206,33 +201,43 @@ public class Main extends ListenerAdapter {
                     return;
                 }
 
+                for (String s : split) {
+                    if (s.toLowerCase().equals("nrg")) {
+                        channel.sendMessage(":heart_eyes: ").queue();
+                        return;
+                    }
+                    if (s.toLowerCase().equals("gay")) {
+                        channel.sendMessage(":grimacing: ").queue();
+                        return;
+                    }
+                    if (s.toLowerCase().equals("tory")) {
+                        channel.sendMessage(":rage: :rage: :rage:").queue();
+                        return;
+                    }
+                    if (s.toLowerCase().equals("politics")) {
+                        channel.sendMessage("if anyone votes tory unfriend me ").queue();
+                        return;
+                    }
+                    if (s.toLowerCase().equals("weird")) {
+                        channel.sendMessage("but it worksssss").queue();
+                        return;
+                    }
 
-
-                if (content.toLowerCase().contains("halfflip") || content.toLowerCase().contains("half flip") || content.toLowerCase().contains("half-flip")) {
-                    channel.sendMessage("whats that?").queue();
-                    return;
-                }
-
-                if (content.toLowerCase().contains("nrg")) {
-                    channel.sendMessage(":heart_eyes: ").queue();
-                    return;
-                }
-                if (content.toLowerCase().contains("gay")) {
-                    channel.sendMessage(":grimacing: ").queue();
-                    return;
-                }
-                if (content.toLowerCase().contains("tory")) {
-                    channel.sendMessage(":rage: :rage: :rage:").queue();
-                }
-                if (content.toLowerCase().contains("politics")) {
-                    channel.sendMessage("if anyone votes tory unfriend me ").queue();
-                }
-                if (content.toLowerCase().contains("weird")) {
-                    channel.sendMessage("but it worksssss").queue();
                 }
                 if (content.toLowerCase().equals("the pings are unbearable")) {
                     channel.sendMessage("agreed").queue();
+                    return;
                 }
+
+                if (content.toLowerCase().contains("halfflip") || content.toLowerCase().contains("half flip") || content.toLowerCase().contains("half-flip")) {
+                    if (random.nextInt(3) == 1){
+                        channel.sendMessage("I can do that now!").queue();
+                    }
+
+                    return;
+                }
+
+
             }
 
         }
